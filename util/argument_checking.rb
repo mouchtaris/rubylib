@@ -1,5 +1,6 @@
 module ArgumentChecking
   require 'util/boolean_common_type'
+  extend self
 
   def initialize
     super
