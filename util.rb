@@ -6,3 +6,7 @@ for mod in %w{
 } do
 	autoload mod.to_sym, AutoLoader.path_for_module_name(:"Util::#{mod}")
 end
+
+module Util
+  extend AutoLoader
+end
