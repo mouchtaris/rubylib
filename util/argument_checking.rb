@@ -17,7 +17,7 @@ module ArgumentChecking
   rescue ArgumentError
     name = block.call.to_s
     nameval = eval name, block.binding
-    raise ArgumentError.new "\"#{name}\" is expected to be a #{type}, but is a #{nameval.class} (#{nameval.inspect})."
+    raise ArgumentError.new "\"#{name}\" is expected to be any of #{types.join ', '}, but is a #{nameval.class} (#{nameval.inspect})."
   end
   
   def require_symbol &block
