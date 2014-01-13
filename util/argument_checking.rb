@@ -12,8 +12,8 @@ module ArgumentChecking
     raise ArgumentError.new "\"#{name}\" is expected to be cool for #{pred}(#{pred.inspect}), but it fails (#{nameval.inspect})." unless pred.call(nameval)
   end
 
-  def require_type type, &block
-    require_predicate lambda{ |v| v.is_a? type }, &block
+  def require_type *types, &block
+    require_predicate lambda{ |v| types.any? &v.method(:is_a?) }, &block
   rescue ArgumentError
     name = block.call.to_s
     nameval = eval name, block.binding
@@ -35,4 +35,9 @@ module ArgumentChecking
   def require_callable &block
     require_predicate lambda{ |el| el.respond_to? :call }, &block
   end
+
+  def require_number &block
+    require_type Integer, &block
+  end
+
 end
