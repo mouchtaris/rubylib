@@ -18,17 +18,24 @@ module ReloadingMapper
   end
 
   def each_name &block
-    @map.each_value &block
+    @map.each_key &block
   end
 
   private
   def reload!
-    @map = ::YAML.load ::File.read @db_pathname
+    @map = ::YAML.load ::File.read @db_pathname if @db_pathname
   end
 
-  def initialize_reloading_mapper db_pathname
-    @db_pathname = db_pathname.to_s.freeze
-    reload!
+  def initialize_reloading_mapper db_or_pathname
+    case db_or_pathname
+      when String then
+        @db_pathname = db_or_pathname.to_s.freeze
+        reload!
+      when Hash then
+        @db_pathname = nil
+        @map = db_or_pathname.dup
+    end
+
   end
 
 end
