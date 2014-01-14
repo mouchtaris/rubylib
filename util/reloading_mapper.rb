@@ -21,6 +21,10 @@ module ReloadingMapper
     @map.each_key &block
   end
 
+  def each &block
+    @map.each &block
+  end
+
   private
   def reload!
     @map = ::YAML.load ::File.read @db_pathname if @db_pathname
