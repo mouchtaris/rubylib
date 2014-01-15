@@ -1,5 +1,6 @@
+require 'util/boolean_common_type'
+
 module ArgumentChecking
-  require 'util/boolean_common_type'
   extend self
 
   def initialize

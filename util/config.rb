@@ -4,6 +4,8 @@ module Util
 
 class Config
 
+  # Map configuration to an object.
+  #
   # Parameter config can be
   # - a [String] filename, ending in '.yaml', in which case
   #   it is loaded as a YAML file,

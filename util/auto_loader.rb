@@ -1,5 +1,6 @@
+require 'pathname'
+
 module AutoLoader
-  require 'pathname'
 
   def self.class_name_to_file_name name
     name.scan(/[A-Z][a-z]*/).map(&:downcase).to_a.join('_')
