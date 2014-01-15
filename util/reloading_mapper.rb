@@ -1,10 +1,12 @@
-require 'yaml'
-
 module Util
 
-module ReloadingMapper
+# A mapper which reloads the underlying
+# database in case a mapping fails.
 
-  def initialize *args, &block
+module ReloadingMapper
+  include Util::YamlLoader
+
+  def initialize *args, **options, &block
     super
   end
 
@@ -25,29 +27,14 @@ module ReloadingMapper
     @map.each &block
   end
 
+  private :reload
   private
   def reload!
-    @map =  (
-              @db_pathnames.map do |path| YAML.load File.read path end +
-              @dbs
-            ).reduce(&:merge)
-    ;
+    @map = reload;
   end
 
   def initialize_reloading_mapper *dbs
-    @db_pathnames = []
-    @dbs = []
-    for db in dbs do
-      case db
-        when String then
-          case File.extname db
-            when '.yaml' then @db_pathnames << db.dup.freeze
-            else @dbs << YAML.load(db).freeze
-          end
-        when Hash then
-          @dbs << db.dup.freeze
-      end
-    end
+    initialize_yaml_loader *dbs
     reload!
   end
 
