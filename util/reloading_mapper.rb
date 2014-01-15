@@ -27,19 +27,28 @@ module ReloadingMapper
 
   private
   def reload!
-    @map = ::YAML.load ::File.read @db_pathname if @db_pathname
+    @map =  (
+              @db_pathnames.map do |path| YAML.load File.read path end +
+              @dbs
+            ).reduce(&:merge)
+    ;
   end
 
-  def initialize_reloading_mapper db_or_pathname
-    case db_or_pathname
-      when String then
-        @db_pathname = db_or_pathname.to_s.freeze
-        reload!
-      when Hash then
-        @db_pathname = nil
-        @map = db_or_pathname.dup
+  def initialize_reloading_mapper *dbs
+    @db_pathnames = []
+    @dbs = []
+    for db in dbs do
+      case db
+        when String then
+          case File.extname db
+            when '.yaml' then @db_pathnames << db.dup.freeze
+            else @dbs << YAML.load(db).freeze
+          end
+        when Hash then
+          @dbs << db.dup.freeze
+      end
     end
-
+    reload!
   end
 
 end
