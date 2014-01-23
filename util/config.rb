@@ -17,7 +17,7 @@ class Config
     for key in @db.keys do
       self.singleton_class.class_exec do undef_method key end
     end
-    for key, val in @db = reload do
+    (@db = reload).each do |key, val|
       define_singleton_method key do val end
     end
   end
