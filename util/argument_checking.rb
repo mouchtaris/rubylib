@@ -41,4 +41,12 @@ module ArgumentChecking
     require_type Integer, &block
   end
 
+  def require_path &block
+    require_type Pathname, &block
+  end
+
+  def require_url &block
+    require_type URI, &block
+  end
+
 end
