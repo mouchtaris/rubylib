@@ -61,7 +61,7 @@ module YamlLoader
     @yamls.map do |yaml|
       case yaml
         when Hash then yaml
-        when String then YAML.load File.read yaml
+        when String then Util::Yaml.load_yaml_file_if_it_exists yaml
       end
     end.
     reduce &:merge
