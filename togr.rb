@@ -4,11 +4,11 @@ module Togr
   Simple = Hash[*%w{
     a α  b β  g γ  d δ  e ε  z ζ  h η  u θ  i ι
     k κ  l λ  m μ  n ν  j ξ  o ο  p π  r ρ  s σ
-    t τ  y υ  f φ  x χ  c ψ  v ω  w ς
+    t τ  y υ  f φ  x χ  c ψ  v ω  w ς  q ;
 
     A Α  B Β  G Γ  D Δ  E Ε  Z Ζ  H Η  U Θ  I Ι
     K Κ  L Λ  M Μ  N Ν  J Ξ  O Ο  P Π  R Ρ  S Σ
-    T Τ  Y Υ  F Φ  X Χ  C Ψ  V Ω
+    T Τ  Y Υ  F Φ  X Χ  C Ψ  V Ω  Q :
   }].deep_freeze
 
   Stressed = Hash[*%w{
