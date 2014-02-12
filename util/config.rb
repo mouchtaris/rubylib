@@ -2,6 +2,7 @@ module Util
 
 class Config
   include Util::YamlLoader
+  include Util::ArgumentChecking
 
   # Map configuration to an object.
   #
@@ -18,8 +19,20 @@ class Config
       self.singleton_class.class_exec do undef_method key end
     end
     (@db = reload).each do |key, val|
-      define_singleton_method key do val end
+      define_getter = -> (val) do define_singleton_method key do val end end
+      define_getter[val]
+      define_singleton_method :"#{key}=", &define_getter
     end
+  end
+
+  def [] key
+    require_symbol{:key}
+    send key
+  end
+
+  def []= key, val
+    require_symbol{:key}
+    send :"#{key}=", val
   end
 
   private :reload
