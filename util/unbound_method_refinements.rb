@@ -2,19 +2,19 @@ module Util
 
 module UnboundMethodRefinements
 
-  refine UnboundMethod do
+refine UnboundMethod do
 
-    def unbound_call receiver, *args, &block
-      bind(receiver).call *args, &block
-    end
-
+  def unbound_call receiver, *args, &block
+    bind(receiver).call *args, &block
   end
 
-  refine Proc do
+end
 
-    alias_method :unbound_call, :call
+refine Proc do
 
-  end
+  alias_method :unbound_call, :call
+
+end
 
 end#module UnboundMethodRefinements
 
