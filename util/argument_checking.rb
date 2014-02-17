@@ -49,4 +49,8 @@ module ArgumentChecking
     require_type URI, &block
   end
 
+  def require_respond_to what, &block
+    require_predicate lambda{ |el| el.respond_to? what }, &block
+  end
+
 end
