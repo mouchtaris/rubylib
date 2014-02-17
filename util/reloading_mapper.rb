@@ -1,8 +1,9 @@
 module Util
 
+#
 # A mapper which reloads the underlying
 # database in case a mapping fails.
-
+#
 module ReloadingMapper
   include Util::YamlLoader
 
@@ -38,6 +39,6 @@ module ReloadingMapper
     reload!
   end
 
-end
+end#module ReloadingMapper
 
-end
+end#module Util

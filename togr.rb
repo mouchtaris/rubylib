@@ -66,4 +66,4 @@ module Togr
     end
   end
 
-end
+end#module Togr

@@ -37,6 +37,6 @@ class Config
 
   private :reload
 
-end
+end#class Config
 
-end
+end#module Util

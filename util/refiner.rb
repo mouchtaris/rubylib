@@ -17,6 +17,10 @@ module Refiner
       end
   end
 
+  def clear_refinements!
+    @refinements = nil
+  end
+
 end#module Refiner
 
 end#module Util

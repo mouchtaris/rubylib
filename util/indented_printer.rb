@@ -30,4 +30,4 @@ module IndentedPrinter
     @indented_printer_nesting -= 1
   end
 
-end
+end#module IndentedPrinter

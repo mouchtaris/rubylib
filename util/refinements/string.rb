@@ -1,9 +1,10 @@
 module Util
+module Refinements
 
 #
 # There are refinements for {::String}.
 #
-module StringRefinements
+module String
   extend Util::Refiner
 
   # Equivalent to
@@ -84,6 +85,7 @@ module StringRefinements
 
   refine! { String }
 
-end#module StringRefinements
+end#module String
 
+end#module Refinements
 end#module Util

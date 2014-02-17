@@ -10,6 +10,6 @@ class Counter
     @number += 1
   end
 
-end
+end#class Counter
 
-end
+end#module Util

@@ -1,9 +1,12 @@
 module Util
+module Refinements
 
-module ArraySortRefinements
+module RSort
+  extend Util::Refiner
 
-refine Array do
-
+  # see #sort
+  # @return this element reverse sorted (descending)
+  refinement \
   def rsort &block
     sorting =
         if block
@@ -13,6 +16,9 @@ refine Array do
     sort &sorting
   end
 
+  # see #sort_by
+  # @return this element reverse sorted (descending)
+  refinement \
   def rsort_by &block
     return rsort unless block
     self.
@@ -21,8 +27,10 @@ refine Array do
       map do |key, el| el end
   end
 
-end
+  refine { ::Array }
+  refine { ::Enumerable }
 
-end#module ArraySortRefinements
+end#module RSort
 
+end#module Refinements
 end#module Util

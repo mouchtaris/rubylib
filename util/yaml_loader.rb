@@ -1,9 +1,8 @@
 require 'yaml'
-#
-require 'util/deep_dup'
 
 module Util
 
+#
 # Preserves yaml sources and reloads them
 # when requested.
 #
@@ -17,7 +16,7 @@ module Util
 # are merged into a final {Hash}. The
 # intermediate hashes are merged in the
 # order in which the sources have been provided.
-
+#
 module YamlLoader
 
   def initialize *args, **options, &block
@@ -67,6 +66,6 @@ module YamlLoader
     reduce &:merge
   end
 
-end
+end#module YamlLoader
 
-end
+end#module Util
