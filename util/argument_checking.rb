@@ -53,4 +53,8 @@ module ArgumentChecking
     require_predicate lambda{ |el| el.respond_to? what }, &block
   end
 
+  def require_class &block
+    require_type Class, &block
+  end
+
 end

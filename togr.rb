@@ -1,4 +1,4 @@
-using Util::Refinements::DeepFreeze
+Util::Refinements::DeepFreeze.refine!
 
 module Togr
   Simple = Hash[*%w{
