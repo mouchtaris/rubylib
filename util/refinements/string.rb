@@ -83,7 +83,7 @@ module String
     end
   end
 
-  refine! { String }
+  refine! { ::String }
 
 end#module String
 

@@ -13,7 +13,10 @@ module Refiner
     context = block.binding
     @refinements.
       each do |ref|
-        context.eval "define_method #{ref}, (instance_method #{ref})"
+        meth = context.eval "instance_method :#{ref}"
+        refine refinee do
+          define_method ref, meth
+        end
       end
   end
 
