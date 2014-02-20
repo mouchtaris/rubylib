@@ -5,7 +5,7 @@ module Util
 # They can be done and undone.
 #
 module Refiner
-  include ArgumentChecking
+  include Util::ArgumentChecking
 
   def self.new_refinements
     Struct.new(:default, :specific).new({}, {})

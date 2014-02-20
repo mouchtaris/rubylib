@@ -1,5 +1,7 @@
 require 'util/boolean_common_type'
 
+module Util
+
 module ArgumentChecking
   extend self
 
@@ -57,4 +59,6 @@ module ArgumentChecking
     require_type Class, &block
   end
 
-end
+end#module ArgumentChecking
+
+end#module Util

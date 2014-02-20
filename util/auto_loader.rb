@@ -3,7 +3,7 @@ require 'pathname'
 module AutoLoader
 
   def self.class_name_to_file_name name
-    name.scan(/[A-Z][a-z]*/).map(&:downcase).to_a.join('_')
+    name.scan(/[A-Z][a-z0-9]*/).map(&:downcase).to_a.join('_')
   end
 
   def self.path_for_module_name name
@@ -19,7 +19,7 @@ module AutoLoader
     @auto_loader_nesting ||= 0
     STDERR.printf('[AL] %s%-*s',
       '| ' * @auto_loader_nesting   ,
-      30 - @auto_loader_nesting * 2 ,
+      50 - @auto_loader_nesting * 2 ,
       full_name                     ,
       )
 

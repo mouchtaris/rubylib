@@ -1,5 +1,3 @@
-$:.unshift __dir__
-
 require 'util/auto_loader'
 
 for mod in %w{
