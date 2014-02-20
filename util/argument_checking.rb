@@ -20,11 +20,11 @@ module ArgumentChecking
     nameval = eval name, block.binding
     raise ArgumentError.new "\"#{name}\" is expected to be any of #{types.join ', '}, but is a #{nameval.class} (#{nameval.inspect})."
   end
-  
+
   def require_symbol &block
     require_type Symbol, &block
   end
-  
+
   def require_string &block
     require_type String, &block
   end

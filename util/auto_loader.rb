@@ -15,7 +15,7 @@ module AutoLoader
 
   def const_missing name
     full_name = "#{self.name}::#{name}"
-    
+
     @auto_loader_nesting ||= 0
     STDERR.printf('[AL] %s%-*s',
       '| ' * @auto_loader_nesting   ,
@@ -28,7 +28,7 @@ module AutoLoader
     then
       result = @auto_loader_looked_for[full_name]
       if result.is_a? FalseClass
-      then raise "#{full_name} already looked for -- nothing like it" 
+      then raise "#{full_name} already looked for -- nothing like it"
       else STDERR.puts "CACHE:#{result}"
       end
       result
