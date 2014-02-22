@@ -32,13 +32,15 @@ module Refiner
   # @param as [Symbol?] optionally, the name of the
   #   refinement method on the refined target
   #
-  def refinement method:, target: nil, as: nil
-    require_symbol{:method}
+  def refinement just_method = nil, method: nil, target: nil, as: nil
+    require_symbol{:just_method} if just_method
+    require_symbol{:method} if method
     require_class{:target} if target
     require_symbol{:as} if as
 
-    meth = instance_method method
-    ref  = as || method
+    name = method || just_method
+    meth = instance_method name
+    ref  = as || name
 
     @refinements ||= Refiner.new_refinements
     refinements = if target
@@ -81,6 +83,14 @@ module Refiner
     end
   end
 
+  def default_targets *targets
+    @default_targets = targets
+  end
+
+  def default_target target
+    @default_targets = [target]
+  end
+
   # Monkey-patch all classes given as _targets_ or
   # all classes found in specific-refinement registrations.
   #
@@ -93,13 +103,16 @@ module Refiner
   # If _targets_ is empty, all specific-refinements are
   # performed.
   #
+  # If _targets_ is empty and {#default_targets} has been
+  # specified, then _default_targets_ is used.
+  #
   # These patchings can be undone with {#coarsen!}
   #
   # @param targets classes to patch
   def refine! *targets
     @applied ||= {}
 
-    targets = @refinements.specific.keys if targets.empty?
+    targets = @default_targets || @refinements.specific.keys if targets.empty?
     targets.each do |refinee|
 
       applying = @applied[refinee] ||= {}

@@ -6,6 +6,8 @@ module Refinements
 #
 module String
   extend Util::Refiner
+  default_target ::String
+
 
   # Equivalent to
   #   gsub "\n", ''
