@@ -4,23 +4,13 @@ module Refinements
 module DeepDup
   extend Refiner
 
-  clear_refinements!
-
-  # @!method Symbol_Fixnum_deep_dup
-  refinement \
-  def deep_dup
+  refinement target: [::Symbol, ::Fixnum], as: :deep_dup, method:
+  def deep_dup__simple
     self
   end
 
-  refine! { ::Symbol }
-  refine! { ::Fixnum }
-
-
-  clear_refinements!
-
-  # @!method Hash_deep_dup
-  refinement \
-  def deep_dup
+  refinement target: ::Hash, as: :deep_dup, method:
+  def deep_dup__for_Hash
     result = dup
     each do |key, val|
       result[key] = val.deep_dup
@@ -28,20 +18,10 @@ module DeepDup
     result
   end
 
-  refine! { ::Hash }
-
-
-  clear_refinements!
-
-  # @!method Array_deep_dup
-  def deep_dup
+  refinement target: ::Array, as: :deep_dup, method:
+  def deep_dup__for_Array
     map &:deep_dup
   end
-
-  refine! { ::Array }
-
-
-  clear_refinements!
 
   # "Deeply" clones an object, by calling
   # {#deep_dup} or {#dup} on all of its instance
@@ -57,8 +37,8 @@ module DeepDup
   # this method returns self.
   #
   # @return a deeply duped clone of this object
-  refinement \
-  def deep_dup
+  refinement target: ::Object, as: :deep_dup, method:
+  def deep_dup__for_Object
     dup.tap do |result|
       for var in instance_variables do
         source  = instance_variable_get(var)
@@ -67,8 +47,6 @@ module DeepDup
       end
     end
   end
-
-  refine! { ::Object }
 
 end#module DeepDup
 

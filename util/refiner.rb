@@ -26,16 +26,17 @@ module Refiner
   # be performed on the given target, or on nothing at
   # all (depending on the arguments passed to {#refine!}).
   #
-  # @param target [Class?] the target to refine
+  # @param target [Class?, Array<Class>?] the targets to refine
   # @param method [Symbol] the name of the method to use
   #   as a refinement
   # @param as [Symbol?] optionally, the name of the
   #   refinement method on the refined target
   #
   def refinement just_method = nil, method: nil, target: nil, as: nil
+    targets = Array(target)
     require_symbol{:just_method} if just_method
     require_symbol{:method} if method
-    require_class{:target} if target
+    targets.each do |target| require_class{:target} end
     require_symbol{:as} if as
 
     name = method || just_method
@@ -43,12 +44,14 @@ module Refiner
     ref  = as || name
 
     @refinements ||= Refiner.new_refinements
-    refinements = if target
-                    then @refinements.specific[target] ||= {}
-                    else @refinements.default
-                  end
-
-    refinements[ref] = meth
+    if !targets or targets.empty?
+      then
+        @refinements.default[ref] = meth
+      else
+        targets.each do |target|
+          (@refinements.specific[target] ||= {})[ref] = meth
+        end
+    end
   end
 
   # Performs the refinements that have been registered
@@ -108,29 +111,34 @@ module Refiner
   #
   # These patchings can be undone with {#coarsen!}
   #
-  # @param targets classes to patch
-  def refine! *targets
+  # @param explicit_targets classes to patch
+  def refine! *explicit_targets
     @applied ||= {}
 
-    targets = @default_targets || @refinements.specific.keys if targets.empty?
+    targets = explicit_targets
+    targets = @default_targets || @refinements.specific.keys if explicit_targets.empty?
     targets.each do |refinee|
 
       applying = @applied[refinee] ||= {}
 
       @refinements.default.each do |ref, meth|
-        applying[ref] = meth
-        refinee.module_exec do
-          STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
-          define_method ref, meth
+        unless applying[ref] then
+          applying[ref] = meth
+          refinee.module_exec do
+            STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
+            define_method ref, meth
+          end
         end
       end
 
       (specifics = @refinements.specific[refinee]) and
       specifics.each do |ref, meth|
-        applying[ref] = meth
-        refinee.module_exec do
-          STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
-          define_method ref, meth
+        unless applying[ref] then
+          applying[ref] = meth
+          refinee.module_exec do
+            STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
+            define_method ref, meth
+          end
         end
       end
 

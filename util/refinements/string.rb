@@ -85,8 +85,6 @@ module String
     end
   end
 
-  refine! { ::String }
-
 end#module String
 
 end#module Refinements
