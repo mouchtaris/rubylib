@@ -26,7 +26,10 @@ module String
   #   from the beginning and _n_ from the end
   refinement \
   def around n = 15
-    "#{self[0..(n-1)]}...#{self[-n..-1]}"
+    if length <= 2 * n
+      then self.dup
+      else "#{self[0..(n-1)]}...#{self[-n..-1]}"
+    end
   end
 
   # Separates the string into matching and non-mathcing
