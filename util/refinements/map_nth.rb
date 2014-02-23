@@ -4,6 +4,8 @@ module Refinements
 module MapNth
   extend Util::Refiner
 
+  default_targets ::Array, ::Enumerable
+
   # In an array in which elements are tuples,
   # the given block is applied to the n-th element
   # of each tuple and the resulting tuple replaces
@@ -18,9 +20,6 @@ module MapNth
       tuple
     end
   end
-
-  refine { ::Array }
-  refine { ::Enumerable }
 
 end#module MapNth
 

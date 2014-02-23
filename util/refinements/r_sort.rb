@@ -4,6 +4,8 @@ module Refinements
 module RSort
   extend Util::Refiner
 
+  default_targets ::Array, ::Enumerable
+
   # see #sort
   # @return this element reverse sorted (descending)
   refinement \
@@ -26,9 +28,6 @@ module RSort
       rsort.
       map do |key, el| el end
   end
-
-  refine { ::Array }
-  refine { ::Enumerable }
 
 end#module RSort
 

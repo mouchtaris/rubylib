@@ -2,7 +2,9 @@ module Util
 module Refinements
 
 module JoinTo
-  extend Util::Refiner
+  extend ::Util::Refiner
+
+  default_target ::Array
 
   # @!method join_to
   #
@@ -30,8 +32,6 @@ module JoinTo
     self[1..-1].each do |el| add_joint[] and yield el end if length > 1
     ;
   end
-
-  refine! { }
 
 end#module JoinTo
 

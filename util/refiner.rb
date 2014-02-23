@@ -33,7 +33,7 @@ module Refiner
   #   refinement method on the refined target
   #
   def refinement just_method = nil, method: nil, target: nil, as: nil
-    targets = Array(target)
+    targets = Array target
     require_symbol{:just_method} if just_method
     require_symbol{:method} if method
     targets.each do |target| require_class{:target} end
@@ -44,13 +44,27 @@ module Refiner
     ref  = as || name
 
     @refinements ||= Refiner.new_refinements
-    if !targets or targets.empty?
+    if targets.empty?
       then
         @refinements.default[ref] = meth
       else
         targets.each do |target|
           (@refinements.specific[target] ||= {})[ref] = meth
         end
+    end
+  end
+
+  # @param refiner [#refine(target), #coarsen(target)]
+  def custom_refinement(refiner, targets:)
+    target = Array targets
+    target.each do |target| require_class{:target} end
+    @custom_refinements ||= Refiner.new_refinements
+    if target.empty? then
+      @custom_refinements.default[refiner] = true
+    else
+      target.each do |target|
+        (@custom_refinements.specific[target] ||= {})[refiner] = true
+      end
     end
   end
 
@@ -114,35 +128,62 @@ module Refiner
   # @param explicit_targets classes to patch
   def refine! *explicit_targets
     @applied ||= {}
+    @custom_applied ||= {}
 
     targets = explicit_targets
-    targets = @default_targets || @refinements.specific.keys if explicit_targets.empty?
-    targets.each do |refinee|
+    targets = @default_targets || (@refinements and @refinements.specific.keys) if explicit_targets.empty?
 
-      applying = @applied[refinee] ||= {}
+    custom_targets = explicit_targets
+    custom_targets = @default_targets || (@custom_refinements and @custom_refinements.specific.keys) if custom_targets.empty?
 
-      @refinements.default.each do |ref, meth|
-        unless applying[ref] then
-          applying[ref] = meth
-          refinee.module_exec do
-            STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
-            define_method ref, meth
+    if @refinements then
+      targets.each do |refinee|
+
+        applying = @applied[refinee] ||= {}
+
+        @refinements.default.each do |ref, meth|
+          unless applying[ref] then
+            applying[ref] = meth
+            refinee.module_exec do
+              STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
+              define_method ref, meth
+            end
+          end
+        end
+
+        (specifics = @refinements.specific[refinee]) and
+        specifics.each do |ref, meth|
+          unless applying[ref] then
+            applying[ref] = meth
+            refinee.module_exec do
+              STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
+              define_method ref, meth
+            end
           end
         end
       end
-
-      (specifics = @refinements.specific[refinee]) and
-      specifics.each do |ref, meth|
-        unless applying[ref] then
-          applying[ref] = meth
-          refinee.module_exec do
-            STDERR.puts "[RF] +#{refinee}##{ref} -> #{meth}"
-            define_method ref, meth
-          end
-        end
-      end
-
     end
+
+    if @custom_refinements then
+      custom_targets.each do |refinee|
+
+        custom_applying = @custom_applied[refinee] ||= {}
+
+        @custom_refinements.default.each do |refiner, _|
+          STDERR.puts "[RF] +#{refinee} ~~ #{refiner}"
+          custom_applying[refiner] = true
+          refiner.refine refinee
+        end
+
+        (specifics = @custom_refinements.specific[refinee]) and
+        specifics.each do |refiner, _|
+          STDERR.puts "[RF] +#{refinee} ~~ #{refiner}"
+          custom_applying[refiner] = true
+          refiner.refine refinee
+        end
+      end
+    end
+
   end
   alias use! refine!
   alias on! refine!
@@ -160,6 +201,11 @@ module Refiner
           STDERR.puts "[RF] -#{refinee}##{ref}"
           undef_method ref
         end
+      end
+      (custom_applied = @custom_applied[refinee]) and
+      custom_applied.each do |refiner, _|
+        STDERR.puts "[RF] -#{refinee} ~~ #{refiner}"
+        refiner.coarsen refinee
       end
     end
   end

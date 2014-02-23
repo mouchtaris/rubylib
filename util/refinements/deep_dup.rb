@@ -2,7 +2,7 @@ module Util
 module Refinements
 
 module DeepDup
-  extend Refiner
+  extend ::Util::Refiner
 
   refinement target: [::Symbol, ::Fixnum], as: :deep_dup, method:
   def deep_dup__simple

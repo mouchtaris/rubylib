@@ -1,5 +1,3 @@
-Util::Refinements::DeepFreeze.refine!
-
 module Togr
   Simple = Hash[*%w{
     a α  b β  g γ  d δ  e ε  z ζ  h η  u θ  i ι

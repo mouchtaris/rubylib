@@ -4,18 +4,26 @@ module Refinements
 module UnboundCall
   extend Util::Refiner
 
-  refinement \
-  def unbound_call receiver, *args, &block
+  refinement target: ::UnboundMethod, as: :unbound_call, method:
+  def unbound_call__for_UnboundMethod receiver, *args, &block
     bind(receiver).call *args, &block
   end
 
-  refine! { ::UnboundMethod }
+  custom_refinement \
+    Class.new {
+      def refine target
+        target.module_exec do
+          alias_method :unbound_call, :call
+        end
+      end
 
-  refine Proc do
-
-    alias_method :unbound_call, :call
-
-  end
+      def coarsen target
+        target.module_exec do
+          undef_method :unbound_call
+        end
+      end
+    }.new,
+    targets: ::Proc
 
 end#module UnboundCall
 
