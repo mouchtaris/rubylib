@@ -85,7 +85,9 @@ module Refiner
     targets     = Array block[]
     refinements = @refinements
 
+    ( # Parentheses for silly ruby 2.1 TODO remove with 2.2
     block.binding.eval('self').module_exec do
+      ( # Parentheses for silly ruby 2.1 TODO remove with 2.2
       targets.each do |refinee|
         defaults  = refinements.default
         specifics = refinements.specific[refinee] || {}
@@ -97,7 +99,9 @@ module Refiner
         end
 
       end
+      )
     end
+    )
   end
 
   def default_targets *targets

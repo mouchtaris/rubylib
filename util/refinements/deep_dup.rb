@@ -39,6 +39,7 @@ module DeepDup
   # @return a deeply duped clone of this object
   refinement target: ::Object, as: :deep_dup, method:
   def deep_dup__for_Object
+    ( # Parentheses for silly ruby 2.1 TODO remove with 2.2
     dup.tap do |result|
       for var in instance_variables do
         source  = instance_variable_get(var)
@@ -46,6 +47,7 @@ module DeepDup
         result.instance_variable_set var, copy
       end
     end
+    )
   end
 
 end#module DeepDup

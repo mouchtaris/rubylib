@@ -23,10 +23,12 @@ module RSort
   refinement \
   def rsort_by &block
     return rsort unless block
+    ( # Parentheses for silly ruby 2.1 TODO remove with 2.2
     self.
       map do |a| [block.call(a), a] end.
       rsort.
       map do |key, el| el end
+    )
   end
 
 end#module RSort
