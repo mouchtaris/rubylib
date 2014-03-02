@@ -15,7 +15,7 @@ module ReloadingMapper
     unless result = @map[name.to_s] then
       reload!
       result = @map[name.to_s]
-      ::Kernel.raise "Rc not found: #{name}" unless result
+      ::Kernel.raise ::IndexError.new "Rc not found: #{name}" unless result
     end
     result
   end
