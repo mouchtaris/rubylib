@@ -23,6 +23,14 @@ module ArgumentChecking
     raise ArgumentError.new "\"#{name}\" is expected to be any of #{types.join ', '}, but is a #{nameval.class} (#{nameval.inspect})."
   end
 
+  def require_respond_to what, &block
+    require_predicate lambda{ |el| el.respond_to? what }, &block
+  rescue ArgumentError
+    name = block.call.to_s
+    nameval = eval name, block.binding
+    raise ArgumentError.new "\"#{name}\" is expected to respond to #{what}, but it doesn't, aww."
+  end
+
   def require_symbol &block
     require_type Symbol, &block
   end
@@ -49,10 +57,6 @@ module ArgumentChecking
 
   def require_url &block
     require_type URI, &block
-  end
-
-  def require_respond_to what, &block
-    require_predicate lambda{ |el| el.respond_to? what }, &block
   end
 
   def require_class &block
