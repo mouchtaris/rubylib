@@ -28,11 +28,12 @@ module ReloadingMapper
     @map.each &block
   end
 
-  private :reload
-  private
   def reload!
     @map = reload;
   end
+
+  private :reload
+  private
 
   def initialize_reloading_mapper *dbs
     initialize_yaml_loader *dbs
