@@ -18,6 +18,7 @@ module Util
 # order in which the sources have been provided.
 #
 module YamlLoader
+  extend Util::ModuleNew
 
   def initialize *args, **options, &block
     super
@@ -54,6 +55,7 @@ module YamlLoader
       end
     end
   end
+  ModuleInitializer = instance_method :initialize_yaml_loader
 
   # @return [Hash] the merged result of all yamls
   def reload
