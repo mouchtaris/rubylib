@@ -2,7 +2,7 @@ module Util
 
 class Config
   include Util::YamlLoader
-  include ArgumentChecking
+  include Util::ArgumentChecking
 
   # Map configuration to an object.
   #
