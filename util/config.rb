@@ -18,11 +18,7 @@ class Config
     for key in @db.keys do
       self.singleton_class.class_exec do undef_method key end
     end
-    (@db = reload).each do |key, val|
-      define_getter = -> (val) do define_singleton_method key do val end end
-      define_getter[val]
-      define_singleton_method :"#{key}=", &define_getter
-    end
+    Config.structify self, (@db = reload)
   end
 
   def [] key
@@ -36,6 +32,26 @@ class Config
   end
 
   private :reload
+  private
+
+  def self.structify target, config
+    config.each do |key, val|
+
+      define_getter = lambda do |val| target.define_singleton_method key do val end end
+
+      case val
+        when Hash then
+          define_getter[Config.structify(val, val)]
+        else
+          define_getter[val]
+      end
+
+      target.define_singleton_method :"#{key}=" do |val|
+        Config.structify self, {key => val}
+      end
+    end
+    target
+  end
 
 end#class Config
 
