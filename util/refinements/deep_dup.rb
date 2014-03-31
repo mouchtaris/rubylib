@@ -4,7 +4,7 @@ module Refinements
 module DeepDup
   extend ::Util::Refiner
 
-  refinement target: [::Symbol, ::Fixnum, ::TrueClass], as: :deep_dup, method:
+  refinement target: [::Symbol, ::Fixnum, ::TrueClass, ::NilClass], as: :deep_dup, method:
   def deep_dup__simple
     self
   end
